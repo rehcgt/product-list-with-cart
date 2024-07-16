@@ -2,7 +2,13 @@
     font-family: "Red Hat Text", sans-serif;
     font-optical-sizing: auto;
     font-weight: normal;
-    font-style: normal;
+    font-style: normal;    
+}
+
+body {
+    background-color: hsl(20, 50%, 98%);
+    margin: 0;
+    padding: 0;
 }
 
 .valid.modified:not([type=checkbox]) {

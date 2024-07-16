@@ -1,44 +1,96 @@
 ﻿@page "/"
+@using System.IO
+@using Newtonsoft.Json
+@using product_list_with_cart.Models
+@using product_list_with_cart.Components
+@using MudBlazor.Services
+
+@implements IBrowserViewportObserver
+@implements IAsyncDisposable
+
 <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
     <MudGrid>
-        <MudItem sm="12" md="10">
+        <MudItem sm="12" md="9">
+            <MudElement HtmlTag="h1" Style="font-weight:bold">Desserts</MudElement>
             <MudGrid>
-                <MudItem xs="12" sm="6" md="4">
-                    <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
-                </MudItem>
-                <MudItem xs="12" sm="6" md="4">
-                    <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
-                </MudItem>
-                <MudItem xs="12" sm="6" md="4">
-                    <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
-                </MudItem>
-                <MudItem xs="12" sm="6" md="4">
-                    <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
-                </MudItem>
-                <MudItem xs="12" sm="6" md="4">
-                    <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
-                </MudItem>
-                <MudItem xs="12" sm="6" md="4">
-                    <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
-                </MudItem>
-                <MudItem xs="12" sm="6" md="4">
-                    <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
-                </MudItem>
-                <MudItem xs="12" sm="6" md="4">
-                    <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
-                </MudItem>
-                <MudItem xs="12" sm="6" md="4">
-                    <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
-                </MudItem>                
+                @if (products != null && products.Length > 0)
+                {
+                    @foreach (var p in products)
+                    {
+                        var imageUrl = currentBreakpoint >= Breakpoint.Md ? p.Image.Desktop : currentBreakpoint == Breakpoint.Sm ? p.Image.Tablet : p.Image.Mobile;
+                        <ProductCard p="@p" imageUrl="@imageUrl"></ProductCard>
+                    }
+                }
             </MudGrid>
         </MudItem>
-        <MudItem xs="12" md="2">
-            Cart
-            <MudStack>
-                <MudPaper Class="pa-3">Item 1</MudPaper>
-                <MudPaper Class="pa-3">Item 2</MudPaper>
-                <MudPaper Class="pa-3">Item 3</MudPaper>
-            </MudStack>
+        <MudItem sm="12" md="3" Class="pl-3">
+            <MudElement HtmlTag="div" Class="pa-4 rounded-lg" Style="background-color: white;">
+                <MudElement HtmlTag="h2" Style="font-weight:bold">Your Cart</MudElement>
+                <MudStack>
+                    <MudPaper Class="pa-3">Item 1</MudPaper>
+                    <MudPaper Class="pa-3">Item 2</MudPaper>
+                    <MudPaper Class="pa-3">Item 3</MudPaper>
+                </MudStack>
+            </MudElement>
         </MudItem>
     </MudGrid>
 </MudContainer>
+
+@code {
+    [Inject]
+    private IBrowserViewportService BrowserViewportService { get; set; }
+
+    [Inject]
+    private HttpClient Http { get; set; }
+
+    private List<Breakpoint> _breakpointHistory = new();
+    private Breakpoint _start;
+    private string jsonPath = Path.Combine("requirements", "data.json");
+    private Product[]? products;
+    private Breakpoint currentBreakpoint;
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = await Http.GetFromJsonAsync<Product[]>(jsonPath);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await BrowserViewportService.SubscribeAsync(this, fireImmediately: true);
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async void OnBreakpointChanged(object? sender, Breakpoint breakpoint)
+    {
+        currentBreakpoint = breakpoint;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public async ValueTask DisposeAsync() => await BrowserViewportService.UnsubscribeAsync(this);
+
+    Guid IBrowserViewportObserver.Id { get; } = Guid.NewGuid();
+
+    ResizeOptions IBrowserViewportObserver.ResizeOptions { get; } = new()
+        {
+            ReportRate = 250,
+            NotifyOnBreakpointOnly = true
+        };
+
+    Task IBrowserViewportObserver.NotifyBrowserViewportChangeAsync(BrowserViewportEventArgs browserViewportEventArgs)
+    {
+        if (browserViewportEventArgs.IsImmediate)
+        {
+            _start = browserViewportEventArgs.Breakpoint;
+        }
+        else
+        {
+            _breakpointHistory.Add(browserViewportEventArgs.Breakpoint);
+        }
+
+        return InvokeAsync(StateHasChanged);
+    }
+}

@@ -1,0 +1,42 @@
+﻿<MudElement HtmlTag="div" onmouseover="@showCountBtn" onmouseout="@HideCountBtn" Style="z-index: 10; margin-top: -20px; text-align: center;">
+    @if (showCount)
+    {
+        <MudButton Variant="Variant.Filled" Class="rounded-xl" Style="@($"background-color:{Colors.Red.Default}; color:{Colors.Gray.Lighten5}; width: 152px;")">
+            <MudElement HtmlTag="div" Style="display: flex; justify-content: space-between; align-items: center; width: 100%;">            
+                <MudIconButton Icon="@Icons.Material.Filled.Remove" Size="Size.Small" Style="@($"color:{Colors.Gray.Lighten5};")" @onclick="RemoveFromCart" />
+                <MudElement HtmlTag="span" Style="text-transform:none; font-weight:bold;">@count</MudElement>
+                <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" Style="@($"color:{Colors.Gray.Lighten5};")" @onclick="AddToCart" />
+            </MudElement>
+        </MudButton>
+    }
+    else
+    {
+        <MudButton Variant="Variant.Filled" Class="rounded-xl" Style="@($"background-color:{Colors.Gray.Lighten5}; color:{Colors.Red.Default}; width: 152px;")">
+            <MudElement HtmlTag="img" Src="/images/icon-add-to-cart.svg" Alt="Cart Icon" />
+            <MudElement HtmlTag="span" Style="text-transform:none; font-weight:bold; margin-left:1em;">Add to Cart</MudElement>
+        </MudButton>
+    }
+</MudElement>
+
+@code {
+    private bool showCount = false;
+    private int count = 0;
+
+    private void AddToCart()
+    {
+        count++;
+    }
+    private void RemoveFromCart()
+    {
+        if (count > 0) count--;
+    }
+    void showCountBtn()
+    {
+        showCount = true;
+    }
+
+    void HideCountBtn()
+    {
+        showCount = false;
+    }
+}
