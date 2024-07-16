@@ -4,6 +4,8 @@ namespace product_list_with_cart.Models
 {
     public class Product
     {
+        [JsonProperty("id")]
+        public string Id { get; set; }
         [JsonProperty("image")]
         public ImageUrls Image { get; set; }
         public string Name { get; set; }

@@ -1,7 +1,6 @@
 ﻿@page "/"
 @using System.IO
 @using Newtonsoft.Json
-@using MudBlazor.Services
 
 @implements IBrowserViewportObserver
 @implements IAsyncDisposable
@@ -22,8 +21,7 @@
             </MudGrid>
         </MudItem>
         <MudItem sm="12" md="3" Class="pl-3">
-            <MudElement HtmlTag="div" Class="pa-4 rounded-lg" Style="background-color: white;">
-                <MudElement HtmlTag="h2" Style="font-weight:bold">Your Cart</MudElement>
+            <MudElement HtmlTag="div" Class="pa-4 rounded-lg" Style="background-color: white;">                
                 <Cart></Cart>
             </MudElement>
         </MudItem>

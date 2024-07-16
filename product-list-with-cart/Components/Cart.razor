@@ -1,15 +1,33 @@
-﻿<MudStack>
-    <MudPaper Class="pa-3">Item 1</MudPaper>
-    <MudPaper Class="pa-3">Item 2</MudPaper>
-    <MudPaper Class="pa-3">Item 3</MudPaper>
-</MudStack>
+﻿<MudPaper Class="pa-4">
+    <MudElement HtmlTag="h2" Style="font-weight:bold">Your Cart</MudElement>
+    @if (CartService.Items.Any())
+    {
+        <MudList T="string">
+            @foreach (var item in CartService.Items)
+            {
+                <MudListItem>
+                    <MudText>@item.ProductName x @item.Quantity - $@item.UnitPrice</MudText>
+                </MudListItem>
+            }
+        </MudList>
+        <MudText Typo="Typo.h6">Total: $@CartService.Items.Sum(i => i.Quantity * i.UnitPrice)</MudText>
+    }
+    else
+    {
+        <MudText>Cart is Empty</MudText>
+    }
+</MudPaper>
 
 @code {
-    private CartList cart = new Cart();
-    [Parameter]
-    public Guid? CartId { get; set; }
-    void AddToCart(CartItem item)
+    [Inject]
+    public CartStateService CartService { get; set; }
+    protected override void OnInitialized()
     {
-        cart.Add(item);
+        CartService.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        CartService.OnChange -= StateHasChanged;
     }
 }
