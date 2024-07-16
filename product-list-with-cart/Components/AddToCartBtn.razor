@@ -1,4 +1,4 @@
-﻿<MudElement HtmlTag="div" onmouseover="@showCountBtn" onmouseout="@HideCountBtn" Style="z-index: 10; margin-top: -20px; text-align: center;">
+﻿<MudElement HtmlTag="div" onmouseenter="@showCountBtn" onmouseleave="@HideCountBtn" Style="z-index: 10; margin-top: -20px; text-align: center;">
     @if (showCount)
     {
         <MudButton Variant="Variant.Filled" Class="rounded-xl" Style="@($"background-color:{Colors.Red.Default}; color:{Colors.Gray.Lighten5}; width: 152px;")">

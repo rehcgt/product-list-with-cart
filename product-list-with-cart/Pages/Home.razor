@@ -1,8 +1,6 @@
 ﻿@page "/"
 @using System.IO
 @using Newtonsoft.Json
-@using product_list_with_cart.Models
-@using product_list_with_cart.Components
 @using MudBlazor.Services
 
 @implements IBrowserViewportObserver
@@ -26,11 +24,7 @@
         <MudItem sm="12" md="3" Class="pl-3">
             <MudElement HtmlTag="div" Class="pa-4 rounded-lg" Style="background-color: white;">
                 <MudElement HtmlTag="h2" Style="font-weight:bold">Your Cart</MudElement>
-                <MudStack>
-                    <MudPaper Class="pa-3">Item 1</MudPaper>
-                    <MudPaper Class="pa-3">Item 2</MudPaper>
-                    <MudPaper Class="pa-3">Item 3</MudPaper>
-                </MudStack>
+                <Cart></Cart>
             </MudElement>
         </MudItem>
     </MudGrid>

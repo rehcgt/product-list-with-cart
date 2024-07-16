@@ -1,0 +1,15 @@
+﻿<MudStack>
+    <MudPaper Class="pa-3">Item 1</MudPaper>
+    <MudPaper Class="pa-3">Item 2</MudPaper>
+    <MudPaper Class="pa-3">Item 3</MudPaper>
+</MudStack>
+
+@code {
+    private CartList cart = new Cart();
+    [Parameter]
+    public Guid? CartId { get; set; }
+    void AddToCart(CartItem item)
+    {
+        cart.Add(item);
+    }
+}
