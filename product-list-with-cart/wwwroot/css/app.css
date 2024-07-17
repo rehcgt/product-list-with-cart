@@ -1,5 +1,5 @@
 * {
-    font-family: "Red Hat Text", sans-serif;
+    font-family: "Red Hat Text", sans-serif !important;
     font-optical-sizing: auto;
     font-weight: normal;
     font-style: normal;    

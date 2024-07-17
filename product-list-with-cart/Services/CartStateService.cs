@@ -38,5 +38,10 @@ public class CartStateService
         }
     }
 
+    public int ItemsCount()
+    {
+        return items.Sum(i => i.Quantity);
+    }
+
     private void NotifyStateChanged() => OnChange?.Invoke();
 }

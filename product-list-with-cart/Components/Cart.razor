@@ -1,5 +1,5 @@
-﻿<MudPaper Class="pa-4">
-    <MudElement HtmlTag="h2" Style="font-weight:bold">Your Cart</MudElement>
+﻿<MudElement HtmlTag="div" Class="pa-4">
+    <MudElement HtmlTag="h2" Style="font-weight:bold">Your Cart (@CartService.ItemsCount())</MudElement>
     @if (CartService.Items.Any())
     {
         <MudList T="string">
@@ -14,9 +14,12 @@
     }
     else
     {
-        <MudText>Cart is Empty</MudText>
+        <MudElement HtmlTag="div" Style="text-align: center;">
+            <MudImage Width="150" Height="150" Src="/images/illustration-empty-cart.svg" />
+            <MudText Style="font-weight: bold;">Your added items will appear here</MudText>
+        </MudElement>
     }
-</MudPaper>
+</MudElement>
 
 @code {
     [Inject]
