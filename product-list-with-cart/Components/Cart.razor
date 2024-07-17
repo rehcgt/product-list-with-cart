@@ -6,11 +6,24 @@
             @foreach (var item in CartService.Items)
             {
                 <MudListItem>
-                    <MudText>@item.ProductName x @item.Quantity - $@item.UnitPrice</MudText>
+                    <MudText Style="@($"color:{Colors.Red.Default}; font-weight:bold;")">@item.ProductName</MudText>
+                    <MudText HtmlTag="span" Style="@($"color:{Colors.Red.Default}; font-weight:bold;")">@item.Quantity</MudText>
+                    <MudText HtmlTag="span" Style="@($"color:{Colors.Red.Default}; font-weight:bold;")">x</MudText>
+                    <MudText HtmlTag="span" Class="mx-2"></MudText>
+                    <MudText HtmlTag="span" Style="@($"color:{Colors.Gray.Default};")">@@</MudText>
+                    <MudText HtmlTag="span" Style="@($"color:{Colors.Gray.Default};")">$@item.UnitPrice</MudText>
+                    <MudText HtmlTag="span" Class="mx-6">$@(item.Quantity * item.UnitPrice)</MudText>     
+                    <MudIconButton HtmlTag="span" Icon="@Icons.Material.Rounded.DeleteOutline" Style="float: right;"></MudIconButton>
+                    <MudDivider Class="mt-4" />
                 </MudListItem>
             }
         </MudList>
-        <MudText Typo="Typo.h6">Total: $@CartService.Items.Sum(i => i.Quantity * i.UnitPrice)</MudText>
+        <MudText Typo="Typo.h6" Class="my-5">Order Total: $@CartService.Items.Sum(i => i.Quantity * i.UnitPrice)</MudText>
+        <MudText HtmlTag="div" Class="pa-5 my-5" Style="background-color: hsl(20, 50%, 98%); text-align: center;">
+            <MudImage Width="20" Height="20" Src="/images/icon-carbon-neutral.svg" />            
+            This is a <b>carbon-neutral</b> delivery
+        </MudText>
+        <MudButton Variant="Variant.Filled" Class="rounded-xl" Style="@($"background-color:{Colors.Red.Default}; color:{Colors.Gray.Lighten5}; width: 100%;")">Confirm Order</MudButton>
     }
     else
     {
