@@ -8,11 +8,11 @@ public class CartStateService
     {
         var existingItem = items.FirstOrDefault(i => i.Id == item.Id);
         if (existingItem != null)
-        {            
+        {
             existingItem.Quantity += item.Quantity;
         }
         else
-        {            
+        {
             items.Add(item);
         }
         NotifyStateChanged();
@@ -25,15 +25,22 @@ public class CartStateService
         {
             item.Quantity += 1;
             NotifyStateChanged();
-        }        
+        }
     }
 
     public void DecrementQuantity(string itemId)
     {
         var item = items.FirstOrDefault(i => i.Id == itemId);
-        if (item != null && item.Quantity > 1)
+        if (item != null)
         {
-            item.Quantity -= 1;
+            if (item.Quantity > 1)
+            {
+                item.Quantity -= 1;
+            }
+            else
+            {
+                items.Remove(item);
+            }
             NotifyStateChanged();
         }
     }
