@@ -1,7 +1,7 @@
 ﻿@implements IDisposable
 
 <MudElement HtmlTag="div" onmouseenter="@showCountBtn" onmouseleave="@HideCountBtn" Style="z-index: 10; margin-top: -20px; text-align: center;">
-    @if (showCount)
+    @if (showCount || count > 0)
     {
         <MudButton Variant="Variant.Filled" Class="rounded-xl" Style="@($"background-color:{Colors.Red.Default}; color:{Colors.Gray.Lighten5}; width: 152px;")">
             <MudElement HtmlTag="div" Style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
