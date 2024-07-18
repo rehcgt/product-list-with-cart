@@ -1,4 +1,6 @@
-﻿<MudElement HtmlTag="div" onmouseenter="@showCountBtn" onmouseleave="@HideCountBtn" Style="z-index: 10; margin-top: -20px; text-align: center;">
+﻿@implements IDisposable
+
+<MudElement HtmlTag="div" onmouseenter="@showCountBtn" onmouseleave="@HideCountBtn" Style="z-index: 10; margin-top: -20px; text-align: center;">
     @if (showCount)
     {
         <MudButton Variant="Variant.Filled" Class="rounded-xl" Style="@($"background-color:{Colors.Red.Default}; color:{Colors.Gray.Lighten5}; width: 152px;")">
@@ -27,24 +29,41 @@
     [Inject]
     public CartStateService CartService { get; set; }
 
+    protected override void OnInitialized()
+    {
+        CartService.OnChange += UpdateCount;
+        UpdateCount();
+    }
+
+    public void Dispose()
+    {
+        CartService.OnChange -= UpdateCount;
+    }
+
+    private void UpdateCount()
+    {
+        count = CartService.getItemCount(p.Id);
+        StateHasChanged();
+    }
+
     private void AddToCart()
     {
         count++;
         if (count == 1)
         {
             CartService.AddItem(new CartItem
-            {
-                Id = p.Id,
-                ProductName = p.Name,
-                Quantity = 1,
-                UnitPrice = p.Price,
-                Thumbnail = p.Image.Thumbnail
-            });
+                {
+                    Id = p.Id,
+                    ProductName = p.Name,
+                    Quantity = 1,
+                    UnitPrice = p.Price,
+                    Thumbnail = p.Image.Thumbnail
+                });
         }
         else
         {
             CartService.IncrementQuantity(p.Id);
-        }        
+        }
     }
 
     private void RemoveFromCart()

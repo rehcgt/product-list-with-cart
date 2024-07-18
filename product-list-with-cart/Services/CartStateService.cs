@@ -18,6 +18,16 @@ public class CartStateService
         NotifyStateChanged();
     }
 
+    public void RemoveItem(string itemId)
+    {
+        var item = items.FirstOrDefault(i => i.Id == itemId);
+        if (item != null)
+        {
+            items.Remove(item);
+            NotifyStateChanged();
+        }
+    }
+
     public void IncrementQuantity(string itemId)
     {
         var item = items.FirstOrDefault(i => i.Id == itemId);
@@ -48,6 +58,22 @@ public class CartStateService
     public int ItemsCount()
     {
         return items.Sum(i => i.Quantity);
+    }
+
+    public int getItemCount(string itemId)
+    {
+        var item = items.FirstOrDefault(i => i.Id == itemId);
+        if (item != null)
+        {
+            return item.Quantity;
+        }
+        return 0;
+    }
+
+    public void ClearCart()
+    {
+        items.Clear();
+        NotifyStateChanged();
     }
 
     private void NotifyStateChanged() => OnChange?.Invoke();

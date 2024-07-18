@@ -6,24 +6,31 @@
             @foreach (var item in CartService.Items)
             {
                 <MudListItem>
-                    <MudText Style="@($"color:{Colors.Red.Default}; font-weight:bold;")">@item.ProductName</MudText>
-                    <MudText HtmlTag="span" Style="@($"color:{Colors.Red.Default}; font-weight:bold;")">@item.Quantity</MudText>
-                    <MudText HtmlTag="span" Style="@($"color:{Colors.Red.Default}; font-weight:bold;")">x</MudText>
-                    <MudText HtmlTag="span" Class="mx-2"></MudText>
-                    <MudText HtmlTag="span" Style="@($"color:{Colors.Gray.Default};")">@@</MudText>
-                    <MudText HtmlTag="span" Style="@($"color:{Colors.Gray.Default};")">$@item.UnitPrice</MudText>
-                    <MudText HtmlTag="span" Class="mx-6">$@(item.Quantity * item.UnitPrice)</MudText>
-                    <MudIconButton HtmlTag="span" Icon="@Icons.Material.Rounded.DeleteOutline" Style="float: right;"></MudIconButton>
+                    <div class="d-flex flex-grow-1">
+                        <div class="flex-auto">
+                            <MudText Style="@($"color:{Colors.Red.Default}; font-weight:bold;")">@item.ProductName</MudText>
+                            <MudText HtmlTag="span" Style="@($"color:{Colors.Red.Default}; font-weight:bold;")">@item.Quantity</MudText>
+                            <MudText HtmlTag="span" Style="@($"color:{Colors.Red.Default}; font-weight:bold;")">x</MudText>
+                            <MudText HtmlTag="span" Class="mx-2"></MudText>
+                            <MudText HtmlTag="span" Style="@($"color:{Colors.Gray.Default};")">@@</MudText>
+                            <MudText HtmlTag="span" Style="@($"color:{Colors.Gray.Default};")">$@item.UnitPrice</MudText>
+                            <MudText HtmlTag="span" Class="mx-6">$@(item.Quantity * item.UnitPrice)</MudText>
+                        </div>
+                        <MudIconButton HtmlTag="span" Icon="@Icons.Material.Rounded.DeleteOutline" OnClick="@(()=>RemoveFromCart(item.Id))" Class="flex-none"></MudIconButton>
+                    </div>
                     <MudDivider Class="mt-4" />
                 </MudListItem>
             }
         </MudList>
-        <MudText Typo="Typo.h6" Class="my-5">Order Total: $@CartService.Items.Sum(i => i.Quantity * i.UnitPrice)</MudText>
+        <div class="d-flex flex-grow-1 my-5">
+            <MudText Typo="Typo.h6" Class="flex-auto">Order Total:</MudText>
+            <MudText Typo="Typo.h6" Class="flex-none">$@CartService.Items.Sum(i => i.Quantity * i.UnitPrice)</MudText>
+        </div>
         <MudText HtmlTag="div" Class="pa-5 my-5" Style="background-color: hsl(20, 50%, 98%); text-align: center;">
             <MudImage Width="20" Height="20" Src="/images/icon-carbon-neutral.svg" />
             This is a <b>carbon-neutral</b> delivery
         </MudText>
-        <MudButton Variant="Variant.Filled" Class="rounded-xl" Style="@($"background-color:{Colors.Red.Default}; color:{Colors.Gray.Lighten5}; width: 100%;")" OnClick="@(() => OpenDialogAsync(_maxWidth))">Confirm Order</MudButton>
+        <MudButton Variant="Variant.Filled" Class="rounded-xl" Style="@($"background-color:{Colors.Red.Default}; color:{Colors.Gray.Lighten5}; width: 100%;")" OnClick="@(() => OpenDialogAsync(_options))">Confirm Order</MudButton>
     }
     else
     {
@@ -39,7 +46,7 @@
     public CartStateService CartService { get; set; }
     [Inject]
     public IDialogService DialogService { get; set; }
-    private readonly DialogOptions _maxWidth = new() { MaxWidth = MaxWidth.Medium, FullWidth = true };
+    private readonly DialogOptions _options = new() { MaxWidth = MaxWidth.Small, FullWidth = true };
     protected override void OnInitialized()
     {
         CartService.OnChange += StateHasChanged;
@@ -54,9 +61,13 @@
     {
         var parameters = new DialogParameters {
             { "CartService", CartService }
-        };       
+        };
 
         return DialogService.ShowAsync<Dialog>("Order Confirmed", parameters, options);
     }
 
+    private void RemoveFromCart(string itemid)
+    {
+        CartService.RemoveItem(itemid);
+    }
 }

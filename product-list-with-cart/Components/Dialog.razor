@@ -17,19 +17,26 @@
                             </MudAvatar>
                         </AvatarContent>
                         <ChildContent>
-                            <MudText Style="@($"color:{Colors.Red.Default}; font-weight:bold;")">@item.ProductName</MudText>
-                            <MudText HtmlTag="span" Style="@($"color:{Colors.Red.Default}; font-weight:bold;")">@item.Quantity</MudText>
-                            <MudText HtmlTag="span" Style="@($"color:{Colors.Red.Default}; font-weight:bold;")">x</MudText>
-                            <MudText HtmlTag="span" Class="mx-2"></MudText>
-                            <MudText HtmlTag="span" Style="@($"color:{Colors.Gray.Default};")">@@</MudText>
-                            <MudText HtmlTag="span" Style="@($"color:{Colors.Gray.Default};")">$@item.UnitPrice</MudText>
-                            <MudText HtmlTag="span" Class="mx-6">$@(item.Quantity * item.UnitPrice)</MudText>
-                            <MudDivider Class="mt-4" />
+                            <MudText HtmlTag="div" Style="@($"color:{Colors.Red.Default}; font-weight:bold;")">@item.ProductName</MudText>
+                            <div class="d-flex flex-grow-1">
+                                <div class="flex-auto">
+                                    <MudText HtmlTag="span" Style="@($"color:{Colors.Red.Default}; font-weight:bold;")">@item.Quantity</MudText>
+                                    <MudText HtmlTag="span" Style="@($"color:{Colors.Red.Default}; font-weight:bold;")">x</MudText>
+                                    <MudText HtmlTag="span" Class="mx-2"></MudText>
+                                    <MudText HtmlTag="span" Style="@($"color:{Colors.Gray.Default};")">@@</MudText>
+                                    <MudText HtmlTag="span" Style="@($"color:{Colors.Gray.Default};")">$@item.UnitPrice</MudText>
+                                </div>
+                                <MudText HtmlTag="div" Class="mx-6 flex-none" Style="font-weight: bold;">$@(item.Quantity * item.UnitPrice)</MudText>
+                            </div>
                         </ChildContent>
                     </MudListItem>
+                    <MudDivider Class="mt-4" />
                 }
             </MudList>
-            <MudText Typo="Typo.h6" Class="my-5">Order Total: $@CartService.Items.Sum(i => i.Quantity * i.UnitPrice)</MudText>
+            <div class="d-flex flex-grow-1 my-5 px-6">
+                <MudText Class="flex-auto" Typo="Typo.h6" HtmlTag="div">Order Total: </MudText>
+                <MudText Class="flex-none" Style="font-weight: bold; font-size:x-large;" HtmlTag="div">$@CartService.Items.Sum(i => i.Quantity * i.UnitPrice)</MudText>
+            </div>
         }
     </DialogContent>
     <DialogActions>
@@ -45,6 +52,7 @@
 
     private void Submit()
     {
+        CartService.ClearCart();
         MudDialog.Close(DialogResult.Ok(true));
     }
 }
